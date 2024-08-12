@@ -22,7 +22,7 @@ const jwt = require('jsonwebtoken');
             const newUser = new User({ email, password });
             await newUser.save();
     
-            const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+            const token = jwt.sign({ id: newUser._id }, `${process.env.JWT_SECRET}`, { expiresIn: '1d' });
     
             return { success: true, user: { id: newUser._id, email: newUser.email }, token };
         } catch (error) {
