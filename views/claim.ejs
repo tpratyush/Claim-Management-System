@@ -121,53 +121,55 @@
         }
 
         async function claimPolicy(policyId) {
-            const token = getToken();
-            const userId = getUserIdFromToken(token);
-            const claimAmount = document.getElementById(`claim-amount-${policyId}`).value;
+                const token = getToken();
+                const userId = getUserIdFromToken(token);
+                const claimAmount = document.getElementById(`claim-amount-${policyId}`).value;
 
-            if (!token || !userId) {
-                alert('User not logged in');
-                return;
-            }
-
-            if (!claimAmount || isNaN(claimAmount) || claimAmount <= 0) {
-                alert('Please enter a valid claim amount');
-                return;
-            }
-
-            try {
-                const response = await fetch('/api/claims/claim', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({ "policyId": policyId, "userId": userId, "claimAmount": parseFloat(claimAmount) }),
-                });
-
-                const result = await response.json();
-                if (response.ok) {
-                    alert(result.message);
-                    updatePolicyAmount(policyId, result.remainingAmount);
-                } else {
-                    alert(result.error);
+                if (!token || !userId) {
+                    alert('User not logged in');
+                    return;
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('An error occurred. Please try again.');
+
+                if (!claimAmount || isNaN(claimAmount) || claimAmount <= 0) {
+                    alert('Please enter a valid claim amount');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/api/claims/claim', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ "policyId": policyId, "userId": userId, "claimAmount": parseFloat(claimAmount) }),
+                    });
+
+                    const result = await response.json();
+                    if (response.ok) {
+                        alert(result.message);
+                        fetchUserClaims(); // Refetch the list of policies
+                    } else {
+                        alert(result.error);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                }
             }
-        }
+
 
         function updatePolicyAmount(policyId, newAmount) {
-            const policyAmountElement = document.getElementById(`policy-amount-${policyId}`);
-            const policyRow = document.getElementById(`policy-row-${policyId}`);
+                const policyAmountElement = document.getElementById(`policy-amount-${policyId}`);
+                const policyRow = document.getElementById(`policy-row-${policyId}`);
 
-            if (newAmount > 0) {
-                policyAmountElement.textContent = newAmount;
-            } else {
-                policyRow.style.display = 'none';
+                if (newAmount > 0) {
+                    policyAmountElement.textContent = newAmount;
+                } else {
+                    policyRow.remove(); // Completely remove the row instead of just hiding it
+                }
             }
-        }
+
 
         async function logout() {
             const token = getToken();

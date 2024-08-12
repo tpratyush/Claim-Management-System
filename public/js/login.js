@@ -61,7 +61,7 @@ signUpBtn.addEventListener('click', async (event) => {
 
       const data = await response.json();
       if (data.success) {
-        localStorage.setItem('userId', data.userId); // Store user ID in local storage
+        localStorage.setItem('token', data.token); // Store user ID in local storage
         window.location.href = '/dashboard';
       } else {
         alert('Signup failed: ' + data.message);
