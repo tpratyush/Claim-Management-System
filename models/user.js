@@ -1,6 +1,6 @@
 // models/User.js
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 // Define a schema for the embedded policy
 const embeddedPolicySchema = new mongoose.Schema({
@@ -44,14 +44,14 @@ const userSchema = new mongoose.Schema({
 userSchema.pre('save', async function(next) {
   const user = this;
   if (user.isModified('password')) {
-    user.password = await bcrypt.hash(user.password, 10);
+    user.password = await bcryptjs.hash(user.password, 10);
   }
   next();
 });
 
 // Method to compare password
 userSchema.methods.comparePassword = async function(candidatePassword) {
-  return await bcrypt.compare(candidatePassword, this.password);
+  return await bcryptjs.compare(candidatePassword, this.password);
 };
 
 const User = mongoose.model('User', userSchema);

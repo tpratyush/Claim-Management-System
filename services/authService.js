@@ -1,6 +1,6 @@
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 // const jwt = require('jsonwebtoken'); // Example using JWT for authentication
     const generateToken = (user) => {
       const payload = { id: user._id, email: user.email };
