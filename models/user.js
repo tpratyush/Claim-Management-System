@@ -1,6 +1,6 @@
 // models/User.js
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+const bcryptjs = require('bcryptjs');
 
 // Define a schema for the embedded policy
 const embeddedPolicySchema = new mongoose.Schema({
